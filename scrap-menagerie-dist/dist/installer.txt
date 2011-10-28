@@ -1,0 +1,4 @@
+;!@Install@!UTF-8!
+Title="Scrap Menagerie"
+RunProgram="bin\scrap-menagerie.bat"
+;!@InstallEnd@! 
