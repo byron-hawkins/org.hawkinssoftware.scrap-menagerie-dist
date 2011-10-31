@@ -1,5 +1,5 @@
-Scrap Menagerie
----------------
+Scrap Menagerie Binary Assembly
+-------------------------------
 
 This is the executable distribution assembler for the 
 [Scrap Menagerie][app], a simple clipboard management utility.
