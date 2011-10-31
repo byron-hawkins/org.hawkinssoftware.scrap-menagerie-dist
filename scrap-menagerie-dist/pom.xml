@@ -9,40 +9,88 @@
 		<plugins>
 
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>appassembler-maven-plugin</artifactId>
-				<version>1.1.1</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+
+					<!-- Copy the rns-agent into the target directory so the app can be 
+						launched from Eclipse. -->
+					<execution>
+						<id>copy</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.hawkinssoftware.rns</groupId>
+									<artifactId>rns-agent</artifactId>
+									<version>${project.parent.version}</version>
+									<outputDirectory>${project.build.directory}/agent</outputDirectory>
+									<destFileName>rns-agent.jar</destFileName>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+
+					<!-- Unpack the native libs into the target directory so the app can 
+						be launched from the Eclipse. -->
+					<execution>
+						<id>unpack-native</id>
+						<phase>package</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.hawkinssoftware.azia</groupId>
+									<artifactId>azia-native-input</artifactId>
+									<version>${project.parent.version}</version>
+									<type>zip</type>
+									<classifier>bin</classifier>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.2.1</version>
 				<configuration>
-					<assembleDirectory>${project.build.directory}/${build.staging.dir}</assembleDirectory>
-					<repositoryName>${staging.repo.dir}</repositoryName>
-					<configurationDirectory>config</configurationDirectory>
-					<copyConfigurationDirectory>true</copyConfigurationDirectory>
-					<extraJvmArguments>-javaagent:"%REPO%"\org\hs\rns\rns-agent\0.1-alpha-1-2011.10.28-SNAPSHOT\rns-agent-0.1-alpha-1-2011.10.28-SNAPSHOT.jar
-						-Djava.library.path=../config
-						-Dsun.awt.noerasebackground=true
-						-Dsun.java2d.noddraw=true
-						-Dsun.java2d.d3d=false</extraJvmArguments>
-					<platforms>
-						<platform>windows</platform>
-					</platforms>
-					<programs>
-						<program>
-							<mainClass>org.hawkinssoftware.ui.util.scraps.ScrapMenagerieMain</mainClass>
-							<name>scrap-menagerie</name>
-						</program>
-					</programs>
+					<descriptors>
+						<descriptor>src/main/assembly/assembly.xml</descriptor>
+					</descriptors>
 				</configuration>
 			</plugin>
 
-			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>exec-maven-plugin</artifactId> 
-				<version>1.2.1</version> <configuration> <executable>c:\dev\qbfc\quickbfc.exe</executable> 
-				<arguments> <argument>scrap-menagerie.bat</argument> <argument>scrap-menagerie.exe</argument> 
-				</arguments> <workingDirectory>${project.build.directory}/${build.staging.dir}/${staging.bin.dir}</workingDirectory> 
-				</configuration> </plugin> -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.1</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<mainClass>org.hawkinssoftware.ui.util.scraps.ScrapMenagerieMain</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			
 		</plugins>
 
 		<pluginManagement>
 			<plugins>
+
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
@@ -52,18 +100,45 @@
 						<target>1.6</target>
 					</configuration>
 				</plugin>
+
+				<!--Tell Eclipse not to participate in the unpack goal. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-dependency-plugin
+										</artifactId>
+										<versionRange>
+											[2.3,)
+										</versionRange>
+										<goals>
+											<goal>unpack</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+
 			</plugins>
 		</pluginManagement>
 
 	</build>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.codehaus.mojo</groupId>
-			<artifactId>appassembler-maven-plugin</artifactId>
-			<version>1.1.1</version>
-			<type>maven-plugin</type>
-		</dependency>
 		<dependency>
 			<groupId>org.codehaus.mojo</groupId>
 			<artifactId>exec-maven-plugin</artifactId>
@@ -75,18 +150,19 @@
 			<artifactId>scrap-menagerie-app</artifactId>
 			<version>0.1-alpha-1-2011.10.28-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-assembly-plugin</artifactId>
+			<version>2.2.1</version>
+			<type>maven-plugin</type>
+		</dependency>
 	</dependencies>
 
-	<properties>
-		<build.staging.dir>staging</build.staging.dir>
-		<staging.repo.dir>dist</staging.repo.dir>
-		<staging.bin.dir>bin</staging.bin.dir>
-	</properties>
-	<packaging>pom</packaging>
 	<parent>
 		<groupId>org.hawkinssoftware.scrap-menagerie</groupId>
 		<artifactId>scrap-menagerie</artifactId>
 		<version>0.1-alpha-1-2011.10.28-SNAPSHOT</version>
 		<relativePath>../scrap-menagerie</relativePath>
 	</parent>
+	<packaging>pom</packaging>
 </project>

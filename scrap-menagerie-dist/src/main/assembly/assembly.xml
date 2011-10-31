@@ -1,0 +1,48 @@
+<assembly>
+	<id>app</id>
+	<!-- Generates a zip package containing the needed files -->
+	<formats>
+		<format>zip</format>
+	</formats>
+
+	<!-- Adds dependencies to zip package under lib directory -->
+	<dependencySets>
+		<dependencySet>
+			<outputDirectory>lib</outputDirectory>
+			<unpack>false</unpack>
+		</dependencySet>
+	</dependencySets>
+
+	<fileSets>
+		<!-- Adds startup scripts to the root directory of zip package -->
+		<fileSet>
+			<directory>etc</directory>
+			<outputDirectory></outputDirectory>
+			<includes>
+				<include>*</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>target/native</directory>
+			<outputDirectory>native</outputDirectory>
+			<includes>
+				<include>*.dll</include>
+			</includes>
+		</fileSet>
+		<fileSet>
+			<directory>target/agent</directory>
+			<outputDirectory>agent</outputDirectory>
+			<includes>
+				<include>*.jar</include>
+			</includes>
+		</fileSet>
+		<!-- adds jar package to the root directory of zip package -->
+		<fileSet>
+			<directory>target</directory>
+			<outputDirectory></outputDirectory>
+			<includes>
+				<include>*.jar</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+</assembly>
