@@ -1,8 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<artifactId>scrap-menagerie-dist</artifactId>
 	<name>scrap-menagerie-dist</name>
+	<packaging>pom</packaging>
 
 	<build>
 		<finalName>scrap-menagerie</finalName>
@@ -69,6 +71,15 @@
 						<descriptor>src/main/assembly/assembly.xml</descriptor>
 					</descriptors>
 				</configuration>
+				<executions>
+					<execution>
+						<id>assemble</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>
@@ -85,21 +96,11 @@
 					</archive>
 				</configuration>
 			</plugin>
-			
+
 		</plugins>
 
 		<pluginManagement>
 			<plugins>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.1</version>
-					<configuration>
-						<source>1.6</source>
-						<target>1.6</target>
-					</configuration>
-				</plugin>
 
 				<!--Tell Eclipse not to participate in the unpack goal. -->
 				<plugin>
@@ -148,21 +149,15 @@
 		<dependency>
 			<groupId>org.hawkinssoftware.scrap-menagerie</groupId>
 			<artifactId>scrap-menagerie-app</artifactId>
-			<version>0.1-alpha-1-2011.10.28-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-assembly-plugin</artifactId>
-			<version>2.2.1</version>
-			<type>maven-plugin</type>
+			<version>0.1.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
 	<parent>
 		<groupId>org.hawkinssoftware.scrap-menagerie</groupId>
 		<artifactId>scrap-menagerie</artifactId>
-		<version>0.1-alpha-1-2011.10.28-SNAPSHOT</version>
-		<relativePath>../scrap-menagerie</relativePath>
+		<version>0.1.1-SNAPSHOT</version>
+		<relativePath>../../project/scrap-menagerie</relativePath>
 	</parent>
-	<packaging>pom</packaging>
+
 </project>
