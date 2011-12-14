@@ -11,5 +11,6 @@ set PARAMS=-javaagent:agent\rns-agent.jar ^
 	-Djava.library.path=native ^
 	-Dsun.awt.noerasebackground=true ^
 	-Dsun.java2d.noddraw=true ^
-	-Dsun.java2d.d3d=false
+	-Dsun.java2d.d3d=false ^
+	-Xmx128m
 java -classpath %CLASSPATH% %PARAMS% org.hawkinssoftware.ui.util.scraps.ScrapMenagerieMain
